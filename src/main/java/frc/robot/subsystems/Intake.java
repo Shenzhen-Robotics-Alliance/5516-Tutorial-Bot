@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
     public Command runIntake() {
         return run(() -> {
             intakeFalcon1.set(0.6);
-            intakeFalcon2.set(0.6);
+            intakeFalcon2.set(0.3);
         });
     }
 
