@@ -12,13 +12,28 @@ public class Intake extends SubsystemBase {
         intakeFalcon1.setInverted(true);
         this.intakeFalcon2 = new TalonFX(15);
         intakeFalcon2.setInverted(false);
+
+        setDefaultCommand(runIdle());
     }
 
     public Command runIntake() {
-        return run(() -> intakeFalcon1.set(0.6));
+        return run(() -> {
+            intakeFalcon1.set(0.6);
+            intakeFalcon2.set(0.6);
+        });
     }
 
     public Command runInverseALittle() {
-        return run(() -> intakeFalcon1.set(-0.2)).withTimeout(0.2);
+        return run(() -> {
+            intakeFalcon1.set(-0.2);
+            intakeFalcon2.set(0.1);
+        }).withTimeout(0.2);
+    }
+
+    public Command runIdle() {
+        return runOnce(() -> {
+            intakeFalcon1.set(0);
+            intakeFalcon2.set(0);
+        });
     }
 }

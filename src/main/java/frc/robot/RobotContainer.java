@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -25,7 +26,7 @@ public class RobotContainer {
     private static final double percentDeadband = 0.03;
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * percentDeadband).withRotationalDeadband(MaxAngularRate * percentDeadband)
-            .withDriveRequestType(DriveRequestType.Velocity); // Use open-loop control for drive motors
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -35,6 +36,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public final Intake intake = new Intake();
+    public final Shooter shooter = new Shooter();
+
     public RobotContainer() {
         configureBindings();
     }
@@ -58,8 +61,14 @@ public class RobotContainer {
 
 
         joystick.leftTrigger(0.5)
-        .whileTrue(intake.runIntake())
-        .onFalse(intake.runInverseALittle());
+            .whileTrue(intake.runIntake().alongWith(shooter.runReverse()))
+            .onFalse(intake.runInverseALittle().deadlineFor(shooter.runReverse()));
+
+        joystick.rightBumper()
+            .whileTrue(shooter.runForward());
+
+        joystick.rightTrigger(0.5).and(joystick.rightBumper())
+            .whileTrue(intake.runIntake());
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
