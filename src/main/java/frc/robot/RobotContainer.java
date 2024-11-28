@@ -46,8 +46,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("runIntakeForever", intake.runIntake().alongWith(shooter.runReverse()).asProxy());
         NamedCommands.registerCommand("intakeFinish", intake.runInverseALittle().deadlineFor(shooter.runReverse()).asProxy());
         NamedCommands.registerCommand("runShooterForever", shooter.runForward().asProxy());
-        NamedCommands.registerCommand("runShooterALittle", shooter.runForward().withTimeout(1).asProxy());
-        NamedCommands.registerCommand("runIntakeALittle", intake.runIntake().withTimeout(0.5).asProxy());
+        NamedCommands.registerCommand("shoot", intake.runIntake().alongWith(shooter.runForward()).withTimeout(0.5).asProxy());
     }
 
     private void configureBindings() {
