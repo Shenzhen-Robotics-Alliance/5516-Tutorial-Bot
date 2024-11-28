@@ -27,10 +27,10 @@ public class Intake extends SubsystemBase {
 
     public Command runInverseALittle() {
         return run(() -> {
-                    intakeFalcon1.set(-0.15);
+                    intakeFalcon1.set(-0.1);
                     intakeFalcon2.set(0.1);
                 })
-                .withTimeout(0.3);
+                .withTimeout(0.2);
     }
 
     public Command runIdle() {
