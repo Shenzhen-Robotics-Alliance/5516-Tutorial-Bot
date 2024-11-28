@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,13 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+
+        drivetrain.configureAutoBuilder();
+        NamedCommands.registerCommand("runIntakeForever", intake.runIntake().alongWith(shooter.runReverse()).asProxy());
+        NamedCommands.registerCommand("intakeFinish", intake.runInverseALittle().deadlineFor(shooter.runReverse()).asProxy());
+        NamedCommands.registerCommand("runShooterForever", shooter.runForward().asProxy());
+        NamedCommands.registerCommand("runShooterALittle", shooter.runForward().withTimeout(1).asProxy());
+        NamedCommands.registerCommand("runIntakeALittle", intake.runIntake().withTimeout(0.5).asProxy());
     }
 
     private void configureBindings() {
