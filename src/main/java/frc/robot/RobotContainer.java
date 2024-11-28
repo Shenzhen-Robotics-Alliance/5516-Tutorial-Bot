@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -47,6 +48,11 @@ public class RobotContainer {
         NamedCommands.registerCommand("intakeFinish", intake.runInverseALittle().deadlineFor(shooter.runReverse()).asProxy());
         NamedCommands.registerCommand("runShooterForever", shooter.runForward().asProxy());
         NamedCommands.registerCommand("shoot", intake.runIntake().alongWith(shooter.runForward()).withTimeout(0.5).asProxy());
+        NamedCommands.registerCommand("shootSequence", shooter.runForward().withTimeout(0.8).andThen(
+            intake.runIntake().alongWith(shooter.runForward()).withTimeout(0.5)
+        ).asProxy());
+
+        autoCommand = AutoBuilder.buildAuto("four notes");
     }
 
     private void configureBindings() {
@@ -55,9 +61,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * 0.6) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -80,7 +86,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    private Command autoCommand = Commands.none();
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return autoCommand;
     }
 }

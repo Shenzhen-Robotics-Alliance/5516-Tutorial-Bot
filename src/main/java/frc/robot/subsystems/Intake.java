@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,6 +11,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         this.intakeFalcon1 = new TalonFX(13);
         intakeFalcon1.setInverted(true);
+        intakeFalcon1.setNeutralMode(NeutralModeValue.Brake);
         this.intakeFalcon2 = new TalonFX(15);
         intakeFalcon2.setInverted(false);
 
@@ -25,9 +27,9 @@ public class Intake extends SubsystemBase {
 
     public Command runInverseALittle() {
         return run(() -> {
-            intakeFalcon1.set(-0.2);
+            intakeFalcon1.set(-0.15);
             intakeFalcon2.set(0.1);
-        }).withTimeout(0.2);
+        }).withTimeout(0.3);
     }
 
     public Command runIdle() {

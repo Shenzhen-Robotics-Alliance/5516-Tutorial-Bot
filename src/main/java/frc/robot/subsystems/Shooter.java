@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command runForward() {
-        return runPercentPower(0.75);
+        return runPercentPower(0.5);
     }
 
     public Command runIdle() {
